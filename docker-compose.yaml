@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+    web:
+        image: nginx:1.18.0
+        container_name: web-laravel
+        ports:
+            - "8080:8080"
+        volumes:
+            - "./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf"
+            - "./app:/var/www/html/app"
+        depends_on:
+            - php
+        networks:
+            - laravel-network
+    php:
+      build:
+              context: "./php"
+              dockerfile: Dockerfile
+    #   image: php7.4:latest
+      container_name: php-laravel
+      volumes:
+            - "./app:/var/www/html/app"
+      networks:
+            - laravel-network
+    # mysql:
+    #     image: mariadb:latest
+    #     environment:
+    #         MYSQL_ROOT_PASSWORD: 'root'
+    #         MYSQL_USER: 'tutorial'
+    #         MYSQL_PASSWORD: 'secret'
+    #         MYSQL_DATABASE: 'tutorial'
+    #     volumes:
+    #         - mysqldata:/var/lib/mysql
+    #     ports:
+    #         - 3306:3306
+# volumes:
+#     mysqldata: {}
+networks:
+  laravel-network:
